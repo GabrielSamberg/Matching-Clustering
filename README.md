@@ -32,7 +32,12 @@ Run the module refined_simultaneous_clustering.py for an example run with an int
 ---
 ## Stock market experiment
 Here I add a link to a Google Colab notebook with a detailed walkthrough and implementation of the stock market experiment 
-* Dont forget to add here once you are done making the notebook!
+### 🛑 WARNING!
+### At the moment the link to the colab notebook below wont work since the repo is private.
+### You still have an access to the notebook .ipynb file on the repo itself.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GabrielSamberg/Matching-Clustering/blob/main/M_C_finance.ipynb)
+
 
 ## 🚀 Installation
 
