@@ -161,9 +161,11 @@ if __name__ == "__main__":
     K = L_X
     L = L_Y
     l = 0.7  # lambda
+    l_x = 1
+    l_y = 1
 
     # optimize our objective
-    prob = KSC(K, L, C, l, w=a, v=b)
+    prob = KSC(K, L, C, l, l_x, l_y, w=a, v=b)
     pi_fp = prob.solve(method='fp', verbose=True)
 
     # derive the switch matrices
