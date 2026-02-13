@@ -1,7 +1,7 @@
 import numpy as np
 import ot
 
-def lot_quad(C, K, L, a, b, r, l, alpha, gamma, tol=1e-9, max_iter=1000, dykstra_iter=1000, initialize_U=None, initialize_V=None):
+def lot_quad(C, K, L, a, b, r, l, l_x, l_y, alpha, gamma, tol=1e-9, max_iter=1000, dykstra_iter=1000, initialize_U=None, initialize_V=None):
     # C = cost matrix
     # K = row quadratic term
     # L = column quadratic term
@@ -36,7 +36,7 @@ def lot_quad(C, K, L, a, b, r, l, alpha, gamma, tol=1e-9, max_iter=1000, dykstra
 
     for k in range(max_iter):
         P = U @ np.diag(1/g) @ V.T
-        M = C + (K + K.T) @ P + P @ (L + L.T)
+        M = C + l_x*(K + K.T) @ P + l_y*P @ (L + L.T)
         grad_dual_norm_U = np.max(M @ V @ np.diag(1/g)+ l*np.log(U))
         grad_dual_norm_V = np.max(M.T @ U @ np.diag(1/g)+ l*np.log(V))
         grad_dual_norm_g = np.max(-np.diag(U.T @ M @ V)/(g**2) + l*np.log(g))
