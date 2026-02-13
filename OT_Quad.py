@@ -6,11 +6,12 @@ import matplotlib.pyplot as plt
 
 
 class KSC:
-    def __init__(self, K, L, C, l, w=None, v=None):
+    def __init__(self, K, L, C, l, l_x, l_y, w=None, v=None):
         # K (n, n) symmetric
         # L (m, m) symmetric
         # C (n, m)
-        # l = lambda
+        # l - lambda for entropy
+        # l_x, l_y - lambdas for Laplacian terms
         # w (n,)
         # v (m,)
 
@@ -18,6 +19,8 @@ class KSC:
         self.L = L
         self.C = C
         self.l = l
+        self.l_x = l_x
+        self.l_y = l_y
 
         self.n, self.m = np.shape(C)
 
@@ -39,14 +42,14 @@ class KSC:
         # return np.sum(np.multiply(pi, self.K@pi)) + np.sum(np.multiply(self.L@pi, pi)) + np.sum(np.multiply(self.C, pi))
 
         #My edit: implementig  g = <pi, K pi> + <pi, pi L> + <C, pi>
-        return np.sum(np.multiply(pi, self.K@pi)) + np.sum(np.multiply(pi, pi@self.L)) + np.sum(np.multiply(self.C, pi))
+        return self.l_x*np.sum(np.multiply(pi, self.K@pi)) + self.l_y*np.sum(np.multiply(pi, pi@self.L)) + np.sum(np.multiply(self.C, pi))
 
     # gradient of g = 2 K pi + 2 L pi + C
     def g_grad(self, pi):
         # return (2*self.K@pi + 2*self.L@pi + self.C)
 
         #My edit: implementing g = 2 K pi + 2 pi L + C
-        return (2*self.K@pi + 2*pi@self.L + self.C)
+        return (self.l_x*2*self.K@pi + self.l_y*2*pi@self.L + self.C)
 
     # entropy term
     def h(self, pi):
@@ -74,6 +77,7 @@ class KSC:
 
         # compute the objective
         obj = self.g(pi) + self.l*self.h(pi)
+        
 
         if verbose==True:
             print(f'Initialization: objective = {obj}')
@@ -99,6 +103,7 @@ class KSC:
 
                 # compute the relative change in the objective value
                 obj = self.g(pi) + self.l*self.h(pi)
+                print(f'max of entropy term :{np.max(self.l*self.h(pi))} \n max of main term: {np.max(self.g(pi))}')
                 obj_change = obj - obj_prev
                 obj_rel_change = obj_change / np.abs(obj_prev)
 
@@ -223,10 +228,12 @@ if __name__ == "__main__":
 
     # 1. Fixed-point (lambda should not be too small)
     l = 0.7  # lambda
-    prob = KSC(K, L, C, l, w=a, v=b)
+    l_x = 1
+    l_y = 1
+    prob = KSC(K, L, C, l, l_x, l_y, w=a, v=b)
     pi_fp = prob.solve(method='fp', verbose=True)
 
-    prob_2 = KSC(K, L, C, l)
+    prob_2 = KSC(K, L, C, l, l_x, l_y)
     pi_fp_1 = prob_2.solve(method='fp', verbose=True)
 
 
