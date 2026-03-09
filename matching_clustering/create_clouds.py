@@ -67,7 +67,7 @@ def plot_point_clouds_side_by_side(X: np.ndarray, Y: np.ndarray):
     # Keep axes aspect ratio consistent
     fig.update_scenes(aspectmode="data")
 
-    fig.show()
+
     return fig
 
 

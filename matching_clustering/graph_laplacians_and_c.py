@@ -1,7 +1,9 @@
 import numpy as np
 from itertools import product
 from joblib import Parallel, delayed
-import ot  # POT: pip install POT
+import ot
+
+from matching_clustering.create_clouds import plot_point_clouds_side_by_side  # POT: pip install POT
 
 
 def graph_laplacians(x, y, sigma_x=0.1, sigma_y=0.1):
@@ -73,30 +75,3 @@ def cost_matrix_c(x, y, a=None, b=None):
         return w1_matrix_uniform
 
 
-if __name__ == "__main__":
-    from create_clouds import create_clouds
-    import matplotlib
-    matplotlib.use("TkAgg")  # or "TkAgg" if you want an interactive window
-    import matplotlib.pyplot as plt
-    path_X = "Data/CAPOD/class3/m25.obj"
-    path_Y = "Data/CAPOD/class3/m26.obj"
-    X, Y = create_clouds(path_X, path_Y)
-    X = X[:500, :]
-    Y = Y[:500, :]
-    a, b = graph_laplacians(X, Y)[4], graph_laplacians(X, Y)[5]
-
-    W1_matrix = cost_matrix_c(X, Y, a, b)
-    W1_matrix_uniform = cost_matrix_c(X, Y)
-
-    W = W1_matrix - W1_matrix_uniform
-    matrices = [W1_matrix, W1_matrix_uniform, W]
-    titles = ['C non-uniform', 'C uniform', 'C_nonuni - C_uni']
-    fig, axes = plt.subplots(1, 3, figsize=(12, 4))
-    for i, ax in enumerate(axes):
-        im = ax.imshow(matrices[i], cmap='viridis', interpolation='nearest')
-        ax.set_title(titles[i])
-        cbar = fig.colorbar(im, ax=ax)  # <-- IMPORTANT
-        cbar.set_label('Pixel Value')
-
-    plt.tight_layout()
-    plt.show()

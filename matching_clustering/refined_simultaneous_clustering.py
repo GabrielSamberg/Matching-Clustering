@@ -140,9 +140,9 @@ def plot_clouds_side_by_side_3d(X: np.ndarray, labels_X: np.ndarray,
     return fig
 
 if __name__ == "__main__":
-    from create_clouds import create_clouds
-    from graph_laplacians_and_c import graph_laplacians,cost_matrix_c
-    from OT_Quad import KSC
+    from matching_clustering.create_clouds import create_clouds
+    from matching_clustering.graph_laplacians_and_c import graph_laplacians,cost_matrix_c
+    from matching_clustering.utils import LapOT
 
 
 
