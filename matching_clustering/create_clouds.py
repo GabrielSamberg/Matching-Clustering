@@ -4,6 +4,10 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 
+# This is 3D specific, so maybe name the file 3D_helpers.py instead of create_clouds.py?
+# Also, rename the functions below to be something like create_3D_clouds and plot_3D_clouds_side_by_side for clarity.
+
+
 def create_clouds(path_x, path_y):
     scene1 = pywavefront.Wavefront(path_x)
     scene2 = pywavefront.Wavefront(path_y)
@@ -70,7 +74,7 @@ def plot_point_clouds_side_by_side(X: np.ndarray, Y: np.ndarray):
 
     return fig
 
-
+# the below code block is unncessary.
 if __name__ == "__main__":
     path_X = "Data/CAPOD/class1/m1.obj"
     path_Y = "Data/CAPOD/class1/m7.obj"

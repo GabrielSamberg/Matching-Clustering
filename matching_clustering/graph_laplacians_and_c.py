@@ -4,8 +4,12 @@ from joblib import Parallel, delayed
 import ot
 
 from matching_clustering.create_clouds import plot_point_clouds_side_by_side  # POT: pip install POT
+# we don't need to import create_clouds since we are not using it here, but we do need the plotting function for visualizations in the notebook.
 
 
+
+# below is essentially the RBF kernel (or Gaussian kernel) and the resulting graph Laplacian with the marginals a and b. 
+# Google: python most efficient ways to construct RBF kernel matrix
 def graph_laplacians(x, y, sigma_x=0.1, sigma_y=0.1):
     n_x, k_x = x.shape[0], x.shape[1]
     n_y, k_y = y.shape[0], y.shape[1]
@@ -41,7 +45,9 @@ def graph_laplacians(x, y, sigma_x=0.1, sigma_y=0.1):
 
     return l_x, l_y, w_x, w_y, a, b
 
-
+# make this applicable to any two input matrices.
+# there are some python functions to compute pairwise distance matrices. 
+# Google: python most efficient ways to construct pairwise distance matrices.
 def cost_matrix_c(x, y, a=None, b=None):
     n_x, k_x = x.shape[0], x.shape[1]
     n_y, k_y = y.shape[0], y.shape[1]
