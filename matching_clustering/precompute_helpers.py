@@ -8,6 +8,7 @@ from sklearn.cluster import KMeans
 # below is essentially the RBF kernel (or Gaussian kernel) and the resulting graph Laplacian with the marginals a and b. 
 # Google: python most efficient ways to construct RBF kernel matrix - DONE
 
+# instead of this, using built-in Laplacian for any W should be more efficient/applicable
 def graph_laplacians(x, y, sigma_x=0.1, sigma_y=0.1, affinity=None):
     if affinity is None:
         w_x = rbf_kernel(x, gamma=1/(2*sigma_x**2)) # (N, N) dense, exact
@@ -30,10 +31,8 @@ def graph_laplacians(x, y, sigma_x=0.1, sigma_y=0.1, affinity=None):
     return l_x, l_y, w_x, w_y, a, b
 
 
-# make this applicable to any two input matrices. - DONE 
-# there are some python functions to compute pairwise distance matrices. 
-# Google: python most efficient ways to construct pairwise distance matrices.
 
+# compute the cost matrix C where C[i, j] = W1(dx[i], dy[j]) for all i, j.
 def cost_matrix_c(dx, dy, a=None, b=None):
     assert dx.ndim == 2 and dx.shape[0] == dx.shape[1], "dx must be a square matrix"
     assert dy.ndim == 2 and dy.shape[0] == dy.shape[1], "dy must be a square matrix"
