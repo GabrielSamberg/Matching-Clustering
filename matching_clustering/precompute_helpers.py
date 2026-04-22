@@ -2,34 +2,7 @@ import numpy as np
 from itertools import product
 from joblib import Parallel, delayed
 import ot
-from sklearn.metrics.pairwise import rbf_kernel
 from sklearn.cluster import KMeans
-
-# below is essentially the RBF kernel (or Gaussian kernel) and the resulting graph Laplacian with the marginals a and b. 
-# Google: python most efficient ways to construct RBF kernel matrix - DONE
-
-# instead of this, using built-in Laplacian for any W should be more efficient/applicable
-def graph_laplacians(x, y, sigma_x=0.1, sigma_y=0.1, affinity=None):
-    if affinity is None:
-        w_x = rbf_kernel(x, gamma=1/(2*sigma_x**2)) # (N, N) dense, exact
-        w_y = rbf_kernel(y, gamma=1/(2*sigma_y**2))  # (N, N) dense, exact
-
-    else:
-        w_x, w_y = affinity
-
-
-    np.fill_diagonal(w_x, 0)                # remove self-loops
-    d_x = np.diag(w_x.sum(axis=1))
-    l_x = d_x - w_x
-    a = w_x.sum(axis=1) / w_x.sum()         # Non uniform distribution a based on graph degrees in X
-
-    
-    np.fill_diagonal(w_y, 0)                # remove self-loops
-    d_y = np.diag(w_y.sum(axis=1))
-    l_y = d_y - w_y                             # or normalized variant
-    b = w_y.sum(axis=1) / w_y.sum()             # Non uniform distribution a based on graph degrees in X
-    return l_x, l_y, w_x, w_y, a, b
-
 
 
 # compute the cost matrix C where C[i, j] = W1(dx[i], dy[j]) for all i, j.
@@ -65,20 +38,8 @@ def build_cluster_matrix(A: np.ndarray, k: int) -> np.ndarray:
     X[i, j] = 1 if row i and row j are in the same cluster, else 0.
     """
     n = A.shape[0]
-    assert A.shape[0] == A.shape[1], "Matrix A must be square"
-
-    # Convert to NumPy for sklearn
-
     # Perform KMeans clustering on the rows
     kmeans = KMeans(n_clusters=k, n_init='auto', random_state=0)
     labels = kmeans.fit_predict(A)
-
-    # Construct the nxn cluster indicator matrix
-    x = np.zeros((n, n))
-
-    for i in range(n):
-        for j in range(n):
-            if labels[i] == labels[j]:
-                x[i, j] = 1
-
-    return x
+    cluster_matrix = (labels[:, None] == labels[None, :]).astype(int)
+    return cluster_matrix
