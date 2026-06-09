@@ -213,22 +213,127 @@ def remove_axes_visuals(ax):
     ax.zaxis.pane.set_visible(False)
 
 
+# def plot_point_clouds_only(
+#     X,
+#     Y,
+#     labels_X,
+#     labels_Y,
+#     elev=20,
+#     azim=45,
+#     point_size=4,
+#     alpha=1.0,
+#     figsize=(10, 5),
+#     save_path=None,
+#     plot_clouds_only=False
+# ):
+    
+
+
+
+#     labels_X_idx, labels_Y_idx, cmap = prepare_label_coloring(labels_X, labels_Y)
+
+#     fig = plt.figure(figsize=figsize)
+
+#     ax1 = fig.add_subplot(1, 2, 1, projection="3d")
+#     ax2 = fig.add_subplot(1, 2, 2, projection="3d")
+
+
+#     if plot_clouds_only:
+#         colors_x = ['royalblue' for label in labels_X_idx]
+
+#         ax1.scatter(
+#             X[:, 0], X[:, 1], X[:, 2],
+#             c=colors_x,
+#             s=point_size,
+#             alpha=alpha
+#         ) 
+
+#         colors_y = ['crimson' for label in labels_Y_idx]  
+#         ax2.scatter(
+#             Y[:, 0], Y[:, 1], Y[:, 2],
+#             c=colors_y,
+#             s=point_size,
+#             alpha=alpha
+#         )
+#     else:
+#         ax1.scatter(
+#             X[:, 0], X[:, 1], X[:, 2],
+#             c=labels_X_idx,
+#             cmap=cmap,
+#             s=point_size,
+#             alpha=alpha
+#         )
+
+#         ax2.scatter(
+#             Y[:, 0], Y[:, 1], Y[:, 2],
+#             c=labels_Y_idx,
+#             cmap=cmap,
+#             s=point_size,
+#             alpha=alpha
+#         )
+
+#     for ax, pts in [(ax1, X), (ax2, Y)]:
+#         ax.view_init(elev=elev, azim=azim)
+#         set_axes_equal(ax, pts)
+#         remove_axes_visuals(ax)
+
+   
+#     plt.subplots_adjust(wspace=0, hspace=0)
+#     if save_path is not None:
+#         plt.savefig(save_path, bbox_inches="tight")
+#     plt.show()
+
+
+def zoom_3d_axis(ax, pts, zoom=1.0):
+    """
+    Zooms a 3D axis by changing x/y/z limits around the cloud center.
+
+    zoom > 1  : zoom in
+    zoom < 1  : zoom out
+    zoom = 1  : no zoom
+    """
+    pts = np.asarray(pts)
+
+    x_min, x_max = pts[:, 0].min(), pts[:, 0].max()
+    y_min, y_max = pts[:, 1].min(), pts[:, 1].max()
+    z_min, z_max = pts[:, 2].min(), pts[:, 2].max()
+
+    x_mid = 0.5 * (x_min + x_max)
+    y_mid = 0.5 * (y_min + y_max)
+    z_mid = 0.5 * (z_min + z_max)
+
+    max_range = max(
+        x_max - x_min,
+        y_max - y_min,
+        z_max - z_min
+    )
+
+    half_range = 0.5 * max_range / zoom
+
+    ax.set_xlim(x_mid - half_range, x_mid + half_range)
+    ax.set_ylim(y_mid - half_range, y_mid + half_range)
+    ax.set_zlim(z_mid - half_range, z_mid + half_range)
+
 def plot_point_clouds_only(
     X,
     Y,
     labels_X,
     labels_Y,
-    elev=20,
-    azim=45,
+    elev_X=20,
+    azim_X=45,
+    roll_X=0,
+    elev_Y=20,
+    azim_Y=45,
+    roll_Y=0,
+    zoom_X=1.0,
+    zoom_Y=1.0,
     point_size=4,
     alpha=1.0,
     figsize=(10, 5),
     save_path=None,
-    plot_clouds_only=False
+    plot_clouds_only=False,
+    wspace=0
 ):
-    
-
-
 
     labels_X_idx, labels_Y_idx, cmap = prepare_label_coloring(labels_X, labels_Y)
 
@@ -236,7 +341,6 @@ def plot_point_clouds_only(
 
     ax1 = fig.add_subplot(1, 2, 1, projection="3d")
     ax2 = fig.add_subplot(1, 2, 2, projection="3d")
-
 
     if plot_clouds_only:
         colors_x = ['royalblue' for label in labels_X_idx]
@@ -246,15 +350,17 @@ def plot_point_clouds_only(
             c=colors_x,
             s=point_size,
             alpha=alpha
-        ) 
+        )
 
-        colors_y = ['crimson' for label in labels_Y_idx]  
+        colors_y = ['crimson' for label in labels_Y_idx]
+
         ax2.scatter(
             Y[:, 0], Y[:, 1], Y[:, 2],
             c=colors_y,
             s=point_size,
             alpha=alpha
         )
+
     else:
         ax1.scatter(
             X[:, 0], X[:, 1], X[:, 2],
@@ -272,13 +378,19 @@ def plot_point_clouds_only(
             alpha=alpha
         )
 
-    for ax, pts in [(ax1, X), (ax2, Y)]:
-        ax.view_init(elev=elev, azim=azim)
-        set_axes_equal(ax, pts)
-        remove_axes_visuals(ax)
+    # Left plot: X
+    ax1.view_init(elev=elev_X, azim=azim_X, roll=roll_X)
+    zoom_3d_axis(ax1, X, zoom=zoom_X)
+    remove_axes_visuals(ax1)
 
-   
-    plt.subplots_adjust(wspace=0, hspace=0)
+    # Right plot: Y
+    ax2.view_init(elev=elev_Y, azim=azim_Y, roll=roll_Y)
+    zoom_3d_axis(ax2, Y, zoom=zoom_Y)
+    remove_axes_visuals(ax2)
+
+    plt.subplots_adjust(wspace=wspace, hspace=0)
+
     if save_path is not None:
         plt.savefig(save_path, bbox_inches="tight")
+
     plt.show()
