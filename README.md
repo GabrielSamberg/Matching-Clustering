@@ -1,45 +1,52 @@
-# Welcome to the Matching + Clustering repository!
-Below I will provide a short explanation of the different components of this repository for an easier use.
+# Cluster-Aware Matching via Laplacian Optimal Transport
 
-## The CAPOD dataset
-Can be found under the Data folder.
+This repository contains the official implementation accompanying the paper **"Cluster-Aware Matching via Laplacian Optimal Transport"**.
 
+The repository provides fully reproducible code for all experiments, figures, and quantitative results presented in the paper. Each experiment is organized as a standalone Google Colab notebook that can be executed independently.
 
----
+## Repository Structure
 
-## Creating the point clouds
-The relevant functions can be found inside the file create_clouds.py.
-Run the module for an example use and plot.
+### 1. Resutls of the alignment experiment on the CAPOD dataset
+**Notebook:** `3DShapeAlignment.ipynb`
 
-
----
-## Calculating L_X, L_Y and C
-All the relevant functions are inside the file graph_laplacians_and_c.py.
-Run the module for an example with visualization of the different C matrices (for the uniform and non uniform variant).
+Reproduces the alignment experiment decribed in Section 5.1 in the paper.
 
 ---
 
-## Optimization 
-Run the module optimization.py for an example run of the following procedure:
-- Set the point clouds X and Y.
-- Calculate L_X,L_Y and C.
-- Optimize our objective and plot the optimal coupling for the uniform and non-uniform case of the marginal distributions of the transportation polytope
+### 2. Results of RSC on the CAPOD dataset
+**Notebook:** `3DShapeRSC.ipynb`
+
+Reproduces the results of RSC applied on 3D point-clouds taken from the CAPOD dataset part of which are figures 1, 2 and 3 presented in the paper.
 
 ---
-## Refined Synchronized Clustering
-Run the module refined_simultaneous_clustering.py for an example run with an interactive 3D plot of the result.
 
----
-## Stock market experiment
-Here I add a link to a Google Colab notebook with a detailed walkthrough and implementation of the stock market experiment 
-### 🛑 WARNING!
-### At the moment the link to the colab notebook below wont work since the repo is private.
-### You still have an access to the notebook .ipynb file on the repo itself.
+### 3.Resuts of RSC on high dimensional Stock Market data
+**Notebook:** `StockMarketRSC.ipynb`
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GabrielSamberg/Matching-Clustering/blob/main/M_C_finance.ipynb)
+Reproduces the experiment of applying RSC on high dimensional financial data decribed in section 5.2 in the paper.
+## Reproducibility
 
+Each notebook is self-contained and includes all necessary steps to:
 
-## 🚀 Installation
+- load the required data,
+- construct the corresponding similarity graphs,
+- solve the proposed Laplacian Optimal Transport problem,
+- reproduce the figures and quantitative results reported in the paper.
+
+The notebooks are intended to be executed independently and require no additional configuration beyond the listed dependencies.
+
+## Citation
+
+If you find this repository useful in your research, please cite:
+
+```bibtex
+@article{clusterawarematching,
+  title={Cluster-Aware Matching via Laplacian Optimal Transport},
+  author={...},
+  journal={...},
+  year={2026}
+}
+```
 
 ```bash
 git clone https://github.com/GabrielSamberg/Matching-Clustering.git
